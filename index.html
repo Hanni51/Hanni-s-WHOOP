@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WHOOP 全量健康分析报告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{--bg:#f5f7fa;--card:#fff;--ink:#1f2a37;--sub:#5b6b7c;--line:#e3e8ef;
+        --green:#2e9e5b;--yellow:#e8a33d;--red:#d9534f;--blue:#3b7ddd;--purple:#7a5cd0;--teal:#1aa3a3;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;line-height:1.7}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+  header{background:linear-gradient(135deg,#1f2a37,#2e4a6b);color:#fff;border-radius:16px;padding:30px 34px;margin-bottom:24px}
+  header h1{margin:0 0 8px;font-size:26px}
+  header .meta{font-size:13px;opacity:.85;display:flex;flex-wrap:wrap;gap:18px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card .v{font-size:24px;font-weight:700}
+  .card .k{font-size:12px;color:var(--sub);margin-top:4px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:20px 0}
+  h2{font-size:20px;margin:0 0 4px;border-left:4px solid var(--blue);padding-left:10px}
+  h2 .badge{font-size:12px;color:#fff;background:var(--blue);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .lead{color:var(--sub);font-size:13px;margin:6px 0 18px}
+  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+  .chart-box{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px}
+  canvas{max-width:100%}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center}
+  th{background:#eef3f9;font-weight:600}
+  td.l,th.l{text-align:left}
+  .tag{display:inline-block;border-radius:6px;padding:1px 7px;font-size:12px;color:#fff}
+  .g{background:var(--green)}.y{background:var(--yellow)}.r{background:var(--red)}
+  .stars{color:var(--yellow);letter-spacing:2px}
+  .insight{background:#f3f8ff;border-left:4px solid var(--blue);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+  .insight b{color:var(--blue)}
+  .warn{background:#fff6f3;border-left:4px solid var(--red)}
+  .risk{background:#fffdf3;border-left:4px solid var(--yellow)}
+  .glossary td{vertical-align:top}
+  .glossary td:first-child{font-weight:600;white-space:nowrap}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:30px}
+  .pill{display:inline-block;background:#eef3f9;border-radius:20px;padding:3px 12px;font-size:12px;color:var(--sub);margin:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>WHOOP 全量健康分析报告</h1>
+  <div class="meta">
+    <span>报告周期：2026-09-18 ～ 2026-10-16（近 30 天实测）</span>
+    <span>生成日期：2026-10-19 13:03</span>
+    <span>分析师视角：健康 / 体能管理</span>
+    <span>账户时区：UTC+8（北京时间）</span>
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card"><div class="v">56.1%</div><div class="k">月均恢复分数</div></div>
+  <div class="card"><div class="v">8h18m</div><div class="k">月均实睡时长</div></div>
+  <div class="card"><div class="v">9.3/21</div><div class="k">月均 Strain 负荷</div></div>
+  <div class="card"><div class="v">32 次</div><div class="k">训练次数（22h06m）</div></div>
+</div>
+
+<section>
+  <h2>〇、数据完整度与总评</h2>
+  <div class="lead">四域覆盖情况：恢复 24/30 天 · 主睡眠 24/30 晚 · 负荷 27/30 天 · 训练 32 次。缺失 4 个完整早晨的恢复记录（多为洗澡/充电未佩戴），对月均趋势影响有限。</div>
+  <table>
+    <tr><th class="l">维度</th><th>评级</th><th>月均关键值</th><th class="l">一句话判断</th></tr>
+    <tr><td class="l">恢复体系</td><td><span class="stars">★★☆☆☆</span></td><td>恢复 56.1% / HRV 61.3ms</td><td class="l">底子偏弱、波动剧烈，但月内呈<b>明确上行</b>（W4 升至 77%）</td></tr>
+    <tr><td class="l">睡眠体系</td><td><span class="stars">★★☆☆☆</span></td><td>实睡 8h18m / 一致性 41.2%</td><td class="l"><b>时长充足、规律性极差</b>——一致性是全月最大短板</td></tr>
+    <tr><td class="l">负荷体系</td><td><span class="stars">★★★☆☆</span></td><td>Strain 9.3/21 / 32 次</td><td class="l">频次达标但<b>总量偏低且月内下行</b>，存在恢复盈余</td></tr>
+    <tr><td class="l">交叉匹配</td><td><span class="stars">★★★☆☆</span></td><td>恢复盈余 11.8 分</td><td class="l">身体长期"充满电却没用掉"，训练刺激不足</td></tr>
+  </table>
+  <div class="insight"><b>综合判断：</b>这是一份"恢复在变好、但好得有点'虚'"的画像——恢复分数的提升主要由<b>训练量下降</b>驱动，而非生活方式优化。当前最该做的不是继续休息，而是<b>在守住睡眠规律的前提下，把训练负荷提上去</b>。</div>
+</section>
+
+<section>
+  <h2>趋势总览<span class="badge">Trajectory</span></h2>
+  <div class="lead">四个核心指标的全月"走向"——先看方向，再看单日噪声。左：4 周进程多维弧线（恢复/负荷/一致性如何反向演进）；右：生理信号逐日漂移（静息心率 + 血氧）。</div>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="weeklyArc" height="270"></canvas></div>
+    <div class="chart-box"><canvas id="physioTrend" height="270"></canvas></div>
+  </div>
+  <div class="insight"><b>趋势一句话：</b>整月是一条"<b>负荷退潮、恢复涨潮</b>"的镜像弧线——W2 训练最猛（负荷 13.8）时恢复被压到 40%，W4 几乎停练（负荷 5.6）时恢复冲到 77%。静息心率与血氧在月中随训练强度同步起伏，进入低负荷期后逐渐回落走平，是身体"卸压"的直接证据。</div>
+</section>
+
+<section>
+  <h2>一、恢复体系<span class="badge">Recovery</span></h2>
+  <div class="lead">日恢复分数与 HRV 双轴趋势（左轴 % / 右轴 ms）；点颜色按分区：绿 ≥67 / 黄 34–66 / 红 &lt;34。</div>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="recTrend" height="260"></canvas></div>
+    <div class="chart-box"><canvas id="recZone" height="260"></canvas></div>
+  </div>
+  <div class="chart-box" style="margin-top:14px"><canvas id="hrvTrend" height="220"></canvas></div>
+  <div class="insight"><b>趋势解读（形象表述）：</b>你的恢复像<b>一架颠簸爬升的航班</b>——9 月中旬在 6% 的"跑道谷底"挣扎（当天身体几乎没电），随后一路震荡上行，到 10 月上旬稳稳停在 77% 的"巡航高度"。但请记住：飞机之所以爬得稳，是因为<b>后段几乎没加油门（训练量骤降）</b>。HRV 与恢复同频起伏（月均 61.3ms，波动 19.5～89ms），说明自主神经系统仍在"敏感模式"，对训练/压力/饮酒高度反应。约六成日子不在绿区（绿区仅 46%），<b>稳定性</b>才是真正要补的课。</div>
+  <table>
+    <tr><th class="l">生理信号</th><th>月均</th><th class="l">解读</th></tr>
+    <tr><td class="l">HRV（心率变异性）</td><td>61.3 ms</td><td class="l">恢复分第一驱动项；大幅波动 = 自主神经缓冲能力时好时坏</td></tr>
+    <tr><td class="l">静息心率 RHR</td><td>63.6 bpm</td><td class="l">自身基础突升 5+ bpm 要警惕承压或潜在感染</td></tr>
+    <tr><td class="l">皮肤温度</td><td>34.5 ℃</td><td class="l">微降属正常波动，无炎症提示</td></tr>
+    <tr><td class="l">血氧 SpO₂</td><td>92.2%</td><td class="l"><b>21/24 天低于 95%</b> 常规线，需重点排查（见风险章）</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>二、睡眠体系<span class="badge">Sleep</span></h2>
+  <div class="lead">实睡时长（左轴 h）+ 睡眠一致性 / 表现（右轴 %）逐日走势。</div>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="sleepTrend" height="260"></canvas></div>
+    <div class="chart-box"><canvas id="sleepStage" height="260"></canvas></div>
+  </div>
+  <div class="insight"><b>趋势解读（形象表述）：</b>你的睡眠像<b>一个有稳定产量、却没有固定班次的工厂</b>——每天都能产出约 8h18m 的"睡眠产品"（效率高达 94.2%，一躺就睡好），但<b>几点开工、几点收工全看心情</b>（一致性仅 41.2%，贯通全月没一周达标）。结构很健康：深睡 1h42m（21%）✅、REM 1h59m（24%）✅，都落在理想区间。问题不在"睡得够不够"，而在"<b>睡得规律不规律</b>"——WHOOP 里，一致性低比睡得少更伤恢复，它会直接压低 HRV 基线。<b>固定起床时间</b>是性价比最高的一招。</div>
+  <table>
+    <tr><th class="l">三率</th><th>月均</th><th class="l">判读</th></tr>
+    <tr><td class="l">睡眠表现</td><td>73.4%</td><td class="l">&lt;90% 未达标：实际睡眠低于当日需求</td></tr>
+    <tr><td class="l">睡眠效率</td><td>94.2%</td><td class="l">入睡快、夜醒少，质量本身不错</td></tr>
+    <tr><td class="l">睡眠一致性</td><td>41.2%</td><td class="l">⚠️ 全月最大短板，目标推到 70%+</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>三、负荷与训练体系<span class="badge">Strain</span></h2>
+  <div class="lead">日 Strain 趋势（左）；四周训练次数柱状（右）。</div>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="strainTrend" height="260"></canvas></div>
+    <div class="chart-box"><canvas id="wkBar" height="260"></canvas></div>
+  </div>
+  <div class="insight"><b>趋势解读（形象表述）：</b>负荷曲线像<b>一条退潮的海岸线</b>——9 月前两周还掀起 13.8 的浪头（W2 高频训练），进入 10 月后水位一路退到 5.6（W4），训练次数从 16 次<b>断崖式塌到 3 次</b>。月均 9.3/21 对增肌/力量目标只是"轻到中等活动"，远未进入能触发有效适应的 10–15 区间。这恰恰解释了上节"恢复虚高"的真相：<b>不是你变强了，是你练少了</b>。此外，力量/普拉提等若未在 APP 手动打标，WHOOP 基本识别不到，真实负荷可能被系统性低估。</div>
+</section>
+
+<section>
+  <h2>四、交叉分析<span class="badge">Recovery × Strain</span></h2>
+  <div class="lead">当日恢复 vs 当日 Strain 散点（相关系数 r = -0.53）；右图为"恢复盈余"示意。</div>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="scatter" height="260"></canvas></div>
+    <div class="chart-box" style="display:flex;flex-direction:column;justify-content:center;align-items:center">
+      <div style="font-size:54px;font-weight:800;color:var(--blue)">+11.8</div>
+      <div style="color:var(--sub);font-size:13px;margin-top:6px">恢复盈余（月均恢复% − 负荷折算%）</div>
+      <div style="width:80%;margin-top:14px;font-size:13px;color:var(--sub)">身体"充满电却没用掉"，长期处于低刺激 → 训练适应停滞</div>
+    </div>
+  </div>
+  <div class="insight"><b>关键洞察：</b><br>
+  • <b>"假性恢复"风险：</b>W4 恢复冲到 77%，但同期 Strain 仅 5.6、训练 3 次。属"因练得少而恢复高"，若据此盲目加量，易把恢复打回原形。<br>
+  • <b>睡眠的杠杆效应：</b>实睡与次日恢复几乎零相关，说明你已睡够；继续堆时长收益极低，把精力转向"睡规律"才是正解。<br>
+  • <b>负向镜像：</b>恢复与负荷呈中强负相关（r=-0.53）——负荷越高的日子，次日晨恢复越低，符合生理直觉，但非唯一主导。</div>
+</section>
+
+<section>
+  <h2>五、周趋势（4 周进程）</h2>
+  <table>
+    <tr><th>周次</th><th>日期</th><th>恢复均%</th><th>Strain均</th><th>一致性均%</th><th>训练次数</th></tr>
+    <tr><td>W1</td><td>09-15~09-21</td><td>43.0</td><td>10.4</td><td>39.8</td><td>7</td></tr><tr><td>W2</td><td>09-22~09-30</td><td>40.2</td><td>13.8</td><td>38.0</td><td>16</td></tr><tr><td>W3</td><td>10-01~10-07</td><td>54.4</td><td>8.0</td><td>46.1</td><td>5</td></tr><tr><td>W4</td><td>10-08~10-15</td><td>77.3</td><td>5.7</td><td>39.5</td><td>3</td></tr>
+  </table>
+  <div class="insight"><b>进程解读：</b>恢复与负荷呈<b>镜像反向</b>——W2 负荷最高（13.8）恢复最低（40.2），W4 负荷最低（5.6）恢复最高（77.3）。一致性四周都低于 50%，<b>没有任何一周规律达标</b>，这是与训练量无关的贯穿性顽疾；训练从 16→3 的塌方，是"虚高恢复"的直接成因，也是下阶段首先要纠偏的点。</div>
+</section>
+
+<section>
+  <h2>六、风险分层与监测</h2>
+  <table>
+    <tr><th>等级</th><th class="l">项目</th><th class="l">现状</th><th class="l">处置建议</th></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">血氧</td><td class="l">21/24 天 &lt;95%</td><td class="l">先排查表带松紧/佩戴位置；正确佩戴仍偏低，用指夹血氧仪交叉验证，必要时就医排查睡眠呼吸</td></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">负荷不足</td><td class="l">恢复盈余 +11.8 分、后两周训练塌方</td><td class="l">渐进式提升训练量，避免长期低刺激导致体能退化</td></tr>
+    <tr><td><span class="tag r">低</span></td><td class="l">最高心率</td><td class="l">单日 202 bpm（含非运动段）</td><td class="l">年长者核对是否误报；运动中伴不适请就医</td></tr>
+    <tr><td><span class="tag r">低</span></td><td class="l">数据完整度</td><td class="l">缺 4 个早晨恢复</td><td class="l">除洗澡充电外尽量全天佩戴，保住基线精度</td></tr>
+  </table>
+  <div class="insight warn"><b>三联信号监测法（每天早晨看三个数）：</b>皮肤温度↑ + 静息心率↑ + HRV↓，出现<b>任意两个</b>即主动减量、早睡、补水。</div>
+</section>
+
+<section>
+  <h2>七、优先级行动建议</h2>
+  <table>
+    <tr><th>优先级</th><th class="l">行动</th><th class="l">具体目标</th></tr>
+    <tr><td><span class="tag r">最高</span></td><td class="l">把训练负荷提回去</td><td class="l">周训练频次 4→9+ 次，单次 Strain 推到 10–13，每周保留 1–2 个高强度日（≥15），渐进不拉满</td></tr>
+    <tr><td><span class="tag r">最高</span></td><td class="l">固定起床时间</td><td class="l">先做到每天同刻起床（误差&lt;30 分），再前移就寝；把一致性推到 70%+</td></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">守住时长、优化表现</td><td class="l">实睡已足，让睡眠表现回 90%+，消化 0h28m 睡眠债</td></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">排查血氧</td><td class="l">连续 3 晚佩戴正确仍 &lt;95%，安排指夹血氧仪复测</td></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">训练后手动打标</td><td class="l">力量/普拉提务必在 APP 标记，否则真实负荷失真</td></tr>
+    <tr><td><span class="tag y">中</span></td><td class="l">每日三联信号</td><td class="l">作训练日"红绿灯"，出现两个异常即降级</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>附录：专业指标与术语 —— 对客户的解释说明</h2>
+  <div class="lead">下方把报告里的专业术语翻译成"人话"，方便直接转发给客户 / 教练。</div>
+  <table class="glossary">
+    <tr><th class="l">术语</th><th class="l">对客一句话解释</th><th class="l">参考线 / 怎么看</th></tr>
+    <tr><td>恢复分数</td><td>WHOOP 每天早晨打的"今天身体还剩多少电"：绿区能练、黄区悠着点、红区休息</td><td>67%+ 绿 / 34–66% 黄 / &lt;34% 红</td></tr>
+    <tr><td>HRV（心率变异性）</td><td>心跳之间细微时间差，差值越大身体越放松、恢复越好；只跟自己比</td><td>看趋势，不看绝对值；骤降=承压</td></tr>
+    <tr><td>静息心率</td><td>安静时心脏每分钟跳几次，反映心脏效率与身体负担</td><td>自身基础突升 5+ bpm 要警惕</td></tr>
+    <tr><td>皮肤温度</td><td>手腕温度相对你个人基线的变化，持续升高可能是身体在对抗感染</td><td>单日波动正常，连续升高才警惕</td></tr>
+    <tr><td>血氧（SpO₂）</td><td>血液里氧气的饱和度，睡眠中异常掉下去可能提示呼吸问题</td><td>常规 ≥95%；持续偏低需排查</td></tr>
+    <tr><td>Strain（负荷）</td><td>0–21 的"今天耗了多少电"：10 以下轻活动，15+ 真练到了</td><td>想增肌/力量，月均宜 10–15</td></tr>
+    <tr><td>深睡（SWS）</td><td>身体修复期：长肌肉、修组织、强化免疫主要在这里</td><td>占总睡眠 13%–23% 为理想</td></tr>
+    <tr><td>REM（快速眼动）</td><td>大脑修复期：管记忆、情绪、清醒度；熬夜最先丢掉它</td><td>占总睡眠 20%–25% 为理想</td></tr>
+    <tr><td>睡眠表现</td><td>实际睡眠 ÷ 当日睡眠需求，90%+ 算达标</td><td>&lt;90% 说明相对当日需求睡少了</td></tr>
+    <tr><td>睡眠效率</td><td>真正睡着的时间 ÷ 躺床上的时间，衡量入睡/夜醒</td><td>&gt;90% 通常不错</td></tr>
+    <tr><td>睡眠一致性</td><td>每天睡觉/起床时间规不规律；低比睡得少更伤恢复</td><td>目标 70%+，先固定起床时间</td></tr>
+    <tr><td>睡眠债</td><td>最近欠的觉的总和，WHOOP 会加进后续睡眠需求</td><td>长期 &gt;30m 需补回</td></tr>
+    <tr><td>恢复盈余</td><td>恢复能力 − 负荷消耗；正值=身体有余力可加练</td><td>+8 分提示当前练得偏少</td></tr>
+    <tr><td>生理周期（Cycle）</td><td>WHOOP 的"一天"从睡醒算到下次入睡，不等于日历日</td><td>跨午夜记录按睡眠起始日计</td></tr>
+    <tr><td>三联信号</td><td>皮温↑+RHR↑+HRV↓ 任一两个出现=身体在报警</td><td>出现两个即主动减量</td></tr>
+    <tr><td>滚动 / 周均</td><td>最近 N 天（含当天）的平均值，用于滤掉单日波动看趋势</td><td>看趋势比看单日更可靠</td></tr>
+  </table>
+</section>
+
+<footer>
+  本报告指标口径来自 WHOOP 官方 API 字段，由健康分析师基于全量数据撰写；分析仅供健康管理参考，不构成医疗建议。
+  如报告中的血氧持续偏低或最高心率异常，请结合专业医疗意见解读。<br>
+  口径：原始时间戳为 UTC，一律按账户时区 +08:00 折算为北京时间展示；睡眠/周期"日期"以睡眠起始日计。
+</footer>
+</div>
+
+<script>
+const D = {"rec_daily": [{"d": "09-18", "r": 6.0, "h": 27.186134}, {"d": "09-19", "r": 28.0, "h": 51.98052}, {"d": "09-20", "r": 68.0, "h": 86.42505}, {"d": "09-21", "r": 70.0, "h": 74.60777}, {"d": "09-22", "r": 46.0, "h": 63.2832}, {"d": "09-24", "r": 40.0, "h": 52.057476}, {"d": "09-25", "r": 32.0, "h": 42.769875}, {"d": "09-26", "r": 29.0, "h": 39.87076}, {"d": "09-29", "r": 53.0, "h": 65.094536}, {"d": "09-30", "r": 41.0, "h": 48.701225}, {"d": "10-01", "r": 51.0, "h": 57.485428}, {"d": "10-02", "r": 48.0, "h": 54.632633}, {"d": "10-03", "r": 69.0, "h": 73.28141}, {"d": "10-04", "r": 58.0, "h": 62.865257}, {"d": "10-05", "r": 9.0, "h": 19.528215}, {"d": "10-06", "r": 56.0, "h": 60.505062}, {"d": "10-07", "r": 90.0, "h": 88.9734}, {"d": "10-10", "r": 79.0, "h": 71.86633}, {"d": "10-11", "r": 67.0, "h": 64.938126}, {"d": "10-12", "r": 86.0, "h": 78.9326}, {"d": "10-13", "r": 78.0, "h": 70.97355}, {"d": "10-14", "r": 71.0, "h": 64.01595}, {"d": "10-15", "r": 83.0, "h": 72.97924}, {"d": "10-16", "r": 89.0, "h": 77.341156}], "rec_full": [{"d": "09-18", "r": 6.0, "h": 27.186134, "rhr": 81.0, "spo2": 90.84615}, {"d": "09-19", "r": 28.0, "h": 51.98052, "rhr": 72.0, "spo2": 90.583336}, {"d": "09-20", "r": 68.0, "h": 86.42505, "rhr": 57.0, "spo2": 91.6}, {"d": "09-21", "r": 70.0, "h": 74.60777, "rhr": 57.0, "spo2": 95.388885}, {"d": "09-22", "r": 46.0, "h": 63.2832, "rhr": 61.0, "spo2": 87.75}, {"d": "09-24", "r": 40.0, "h": 52.057476, "rhr": 68.0, "spo2": 92.8421}, {"d": "09-25", "r": 32.0, "h": 42.769875, "rhr": 74.0, "spo2": 92.166664}, {"d": "09-26", "r": 29.0, "h": 39.87076, "rhr": 76.0, "spo2": 92.041664}, {"d": "09-29", "r": 53.0, "h": 65.094536, "rhr": 66.0, "spo2": 88.95}, {"d": "09-30", "r": 41.0, "h": 48.701225, "rhr": 70.0, "spo2": 94.1579}, {"d": "10-01", "r": 51.0, "h": 57.485428, "rhr": 65.0, "spo2": 91.333336}, {"d": "10-02", "r": 48.0, "h": 54.632633, "rhr": 66.0, "spo2": 93.57143}, {"d": "10-03", "r": 69.0, "h": 73.28141, "rhr": 60.0, "spo2": 90.6}, {"d": "10-04", "r": 58.0, "h": 62.865257, "rhr": 62.0, "spo2": 92.75}, {"d": "10-05", "r": 9.0, "h": 19.528215, "rhr": 83.0, "spo2": 92.8421}, {"d": "10-06", "r": 56.0, "h": 60.505062, "rhr": 68.0, "spo2": 93.23529}, {"d": "10-07", "r": 90.0, "h": 88.9734, "rhr": 56.0, "spo2": 91.416664}, {"d": "10-10", "r": 79.0, "h": 71.86633, "rhr": 56.0, "spo2": 93.8125}, {"d": "10-11", "r": 67.0, "h": 64.938126, "rhr": 55.0, "spo2": 91.875}, {"d": "10-12", "r": 86.0, "h": 78.9326, "rhr": 52.0, "spo2": 88.333336}, {"d": "10-13", "r": 78.0, "h": 70.97355, "rhr": 54.0, "spo2": 90.9}, {"d": "10-14", "r": 71.0, "h": 64.01595, "rhr": 57.0, "spo2": 96.166664}, {"d": "10-15", "r": 83.0, "h": 72.97924, "rhr": 56.0, "spo2": 93.76316}, {"d": "10-16", "r": 89.0, "h": 77.341156, "rhr": 55.0, "spo2": 95.14286}], "roll_r": [6.0, 17.0, 34.0, 43.0, 43.6, 43.0, 41.4, 44.7, 48.3, 44.4, 41.7, 42.0, 46.1, 49.9, 47.0, 47.4, 54.4, 58.4, 61.1, 63.6, 66.4, 75.3, 79.1, 79.0], "roll_h": [27.2, 39.6, 55.2, 60.0, 60.7, 59.3, 56.9, 58.7, 60.6, 55.2, 52.8, 51.5, 54.5, 57.4, 54.5, 53.9, 59.6, 61.7, 63.1, 63.9, 65.1, 71.5, 73.2, 71.6], "sleep_daily": [{"d": "09-18", "a": 8.12, "c": 24.0, "p": 37.0}, {"d": "09-19", "a": 7.93, "c": 44.0, "p": 52.0}, {"d": "09-20", "a": 5.75, "c": 55.0, "p": 76.0}, {"d": "09-21", "a": 9.12, "c": 36.0, "p": 78.0}, {"d": "09-22", "a": 6.04, "c": 65.0, "p": 79.0}, {"d": "09-24", "a": 10.09, "c": 47.0, "p": 72.0}, {"d": "09-25", "a": 10.0, "c": 50.0, "p": 59.0}, {"d": "09-26", "a": 7.57, "c": 66.0, "p": 53.0}, {"d": "09-29", "a": 5.4, "c": 0.0, "p": 74.0}, {"d": "09-30", "a": 8.95, "c": 0.0, "p": 88.0}, {"d": "10-01", "a": 9.71, "c": 38.0, "p": 78.0}, {"d": "10-02", "a": 9.12, "c": 66.0, "p": 84.0}, {"d": "10-03", "a": 10.83, "c": 39.0, "p": 73.0}, {"d": "10-04", "a": 7.52, "c": 60.0, "p": 82.0}, {"d": "10-05", "a": 7.13, "c": 31.0, "p": 40.0}, {"d": "10-06", "a": 8.98, "c": 39.0, "p": 78.0}, {"d": "10-07", "a": 9.32, "c": 50.0, "p": 79.0}, {"d": "10-10", "a": 9.05, "c": 0.0, "p": 100.0}, {"d": "10-11", "a": 5.06, "c": 0.0, "p": 79.0}, {"d": "10-12", "a": 7.1, "c": 43.0, "p": 75.0}, {"d": "10-13", "a": 7.95, "c": 58.0, "p": 81.0}, {"d": "10-14", "a": 7.51, "c": 73.0, "p": 85.0}, {"d": "10-15", "a": 9.73, "c": 63.0, "p": 84.0}, {"d": "10-16", "a": 11.58, "c": 41.0, "p": 75.0}], "strain_daily": [{"d": "09-17", "s": 17.14}, {"d": "09-18", "s": 12.66}, {"d": "09-19", "s": 9.33}, {"d": "09-20", "s": 6.1}, {"d": "09-21", "s": 6.82}, {"d": "09-22", "s": 14.06}, {"d": "09-24", "s": 15.22}, {"d": "09-25", "s": 15.53}, {"d": "09-26", "s": 20.59}, {"d": "09-27", "s": 16.16}, {"d": "09-29", "s": 8.3}, {"d": "09-30", "s": 6.59}, {"d": "10-01", "s": 7.06}, {"d": "10-02", "s": 5.3}, {"d": "10-03", "s": 3.97}, {"d": "10-04", "s": 17.27}, {"d": "10-05", "s": 7.15}, {"d": "10-06", "s": 8.26}, {"d": "10-07", "s": 7.24}, {"d": "10-08", "s": 7.46}, {"d": "10-10", "s": 5.3}, {"d": "10-11", "s": 4.18}, {"d": "10-12", "s": 4.45}, {"d": "10-13", "s": 5.19}, {"d": "10-14", "s": 5.65}, {"d": "10-15", "s": 7.58}, {"d": "10-16", "s": 6.92}], "scatter": [{"x": 89.0, "y": 6.91682}, {"x": 83.0, "y": 7.5763545}, {"x": 71.0, "y": 5.654562}, {"x": 78.0, "y": 5.190251}, {"x": 86.0, "y": 4.4450293}, {"x": 67.0, "y": 4.18082}, {"x": 79.0, "y": 5.299808}, {"x": 90.0, "y": 7.236515}, {"x": 56.0, "y": 8.257884}, {"x": 9.0, "y": 7.15068}, {"x": 58.0, "y": 17.274061}, {"x": 69.0, "y": 3.9732647}, {"x": 48.0, "y": 5.296738}, {"x": 51.0, "y": 7.0586786}, {"x": 41.0, "y": 6.586567}, {"x": 53.0, "y": 8.302759}, {"x": 29.0, "y": 20.591726}, {"x": 32.0, "y": 15.52714}, {"x": 40.0, "y": 15.220857}, {"x": 46.0, "y": 14.059659}, {"x": 70.0, "y": 6.822224}, {"x": 68.0, "y": 6.1024847}, {"x": 28.0, "y": 9.325144}, {"x": 6.0, "y": 12.655874}], "weekly": [{"week": "W1", "range": "09-15~09-21", "recovery": 43.0, "strain": 10.4, "consistency": 39.8, "workouts": 7}, {"week": "W2", "range": "09-22~09-30", "recovery": 40.2, "strain": 13.8, "consistency": 38.0, "workouts": 16}, {"week": "W3", "range": "10-01~10-07", "recovery": 54.4, "strain": 8.0, "consistency": 46.1, "workouts": 5}, {"week": "W4", "range": "10-08~10-15", "recovery": 77.3, "strain": 5.7, "consistency": 39.5, "workouts": 3}], "agg": {"n_recovery": 24, "n_sleep": 24, "n_strain": 27, "n_workout": 32, "rec_mean": 56.1, "rec_min": 6.0, "rec_max": 90.0, "green": 11, "yellow": 8, "red": 5, "green_pct": 46, "hrv_mean": 61.3, "rhr_mean": 63.6, "spo2_mean": 92.2, "spo2_below95": 21, "spo2_n": 24, "skin_mean": 34.5, "actual_mean": "8h18m", "sws": "1h42m", "sws_pct": 21, "rem": "1h59m", "rem_pct": 24, "perf_mean": 73.4, "eff_mean": 94.2, "cons_mean": 41.2, "strain_mean": 9.3, "strain_max": 20.59, "strain_min": 3.97, "workouts": 32, "workout_total": "22h06m", "corr_rs": -0.53, "surplus": 11.8}, "window": {"start": "2026-09-18", "end": "2026-10-16"}};
+const G='#2e9e5b', Y='#e8a33d', R='#d9534f', B='#3b7ddd', P='#7a5cd0', T='#1aa3a3';
+Chart.defaults.font.family = '-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+Chart.defaults.color = '#5b6b7c';
+
+// 恢复趋势（双轴）
+new Chart(document.getElementById('recTrend'), {
+  type:'line',
+  data:{labels:D.rec_daily.map(x=>x.d),
+    datasets:[
+      {label:'恢复分数 %',data:D.rec_daily.map(x=>x.r),yAxisID:'y',
+        borderColor:B,backgroundColor:'rgba(59,125,221,.12)',fill:true,tension:.3,pointRadius:3,
+        pointBackgroundColor:D.rec_daily.map(x=>x.r>=67?G:(x.r>=34?Y:R))},
+      {label:'HRV ms',data:D.rec_daily.map(x=>x.h),yAxisID:'y2',
+        borderColor:P,backgroundColor:'transparent',tension:.3,pointRadius:0,borderDash:[4,3]},
+      {label:'恢复 7日滚动均值',data:D.roll_r,borderColor:'#1f2a37',
+        borderWidth:2.5,backgroundColor:'transparent',tension:.3,pointRadius:0}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{min:0,max:100,title:{display:true,text:'恢复 %'}},
+      y2:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'HRV ms'}}}}
+});
+
+// 恢复分区
+new Chart(document.getElementById('recZone'), {
+  type:'doughnut',
+  data:{labels:['绿区 (≥67)','黄区 (34–66)','红区 (<34)'],
+    datasets:[{data:[D.agg.green,D.agg.yellow,D.agg.red],
+      backgroundColor:[G,Y,R]}]},
+  options:{plugins:{legend:{position:'bottom'},title:{display:true,text:'恢复分区分布（'+D.agg.n_recovery+' 天）'}},cutout:'58%'}
+});
+
+// 睡眠趋势（实睡 + 一致性 + 表现）
+new Chart(document.getElementById('sleepTrend'), {
+  type:'line',
+  data:{labels:D.sleep_daily.map(x=>x.d),
+    datasets:[
+      {label:'实睡 h',data:D.sleep_daily.map(x=>x.a),yAxisID:'y',
+        borderColor:B,backgroundColor:'rgba(59,125,221,.10)',fill:true,tension:.3,pointRadius:2},
+      {label:'一致性 %',data:D.sleep_daily.map(x=>x.c),yAxisID:'y2',borderColor:Y,tension:.3,pointRadius:1},
+      {label:'表现 %',data:D.sleep_daily.map(x=>x.p),yAxisID:'y2',borderColor:P,tension:.3,pointRadius:1,borderDash:[4,3]}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{title:{display:true,text:'实睡小时'}},
+      y2:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'%'}}}}
+});
+
+// 睡眠结构
+new Chart(document.getElementById('sleepStage'), {
+  type:'doughnut',
+  data:{labels:['深睡 '+D.agg.sws_pct+'%','REM '+D.agg.rem_pct+'%','浅睡'],
+    datasets:[{data:[D.agg.sws_pct,D.agg.rem_pct,100-D.agg.sws_pct-D.agg.rem_pct],
+      backgroundColor:[B,P,'#c9d6e3']}]},
+  options:{plugins:{legend:{position:'bottom'},title:{display:true,text:'睡眠结构占比（月均）'}},cutout:'58%'}
+});
+
+// 负荷趋势
+new Chart(document.getElementById('strainTrend'), {
+  type:'line',
+  data:{labels:D.strain_daily.map(x=>x.d),
+    datasets:[{label:'日 Strain',data:D.strain_daily.map(x=>x.s),
+      borderColor:T,backgroundColor:'rgba(26,163,163,.12)',fill:true,tension:.3,pointRadius:2}]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{min:0,max:21,title:{display:true,text:'Strain / 21'},
+      grid:{color:ctx=>ctx.tick.value<=10?'rgba(46,158,91,.12)':'rgba(217,83,79,.10)'}}}}
+});
+
+// 周训练频次
+new Chart(document.getElementById('wkBar'), {
+  type:'bar',
+  data:{labels:D.weekly.map(w=>w.week),
+    datasets:[{label:'训练次数',data:D.weekly.map(w=>w.workouts),
+      backgroundColor:[B,B,Y,R]}]},
+  options:{plugins:{legend:{display:false},title:{display:true,text:'四周训练次数'}},
+    scales:{y:{beginAtZero:true,title:{display:true,text:'次'}}}}
+});
+
+// 散点 恢复 vs Strain
+new Chart(document.getElementById('scatter'), {
+  type:'scatter',
+  data:{datasets:[{label:'恢复% vs Strain',data:D.scatter,
+    backgroundColor:'rgba(217,83,79,.55)',pointRadius:4}]},
+  options:{plugins:{legend:{display:false},title:{display:true,text:'恢复% — Strain 散点（r='+D.agg.corr_rs+'）'}},
+    scales:{x:{title:{display:true,text:'恢复分数 %'}},y:{title:{display:true,text:'Strain'},min:0,max:21}}}
+});
+
+// HRV 走势 + 7日滚动
+new Chart(document.getElementById('hrvTrend'), {
+  type:'line',
+  data:{labels:D.rec_full.map(x=>x.d),
+    datasets:[
+      {label:'HRV ms（日）',data:D.rec_full.map(x=>x.h),borderColor:P,
+        backgroundColor:'rgba(122,92,208,.10)',fill:true,tension:.3,pointRadius:2},
+      {label:'HRV 7日滚动均值',data:D.roll_h,borderColor:'#1f2a37',
+        borderWidth:2.5,backgroundColor:'transparent',tension:.3,pointRadius:0}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}},title:{display:true,text:'HRV（心率变异性）逐日走势与趋势线'}},
+    scales:{y:{min:0,max:100,title:{display:true,text:'HRV ms'}}}}
+});
+
+// 周进程多维弧线
+new Chart(document.getElementById('weeklyArc'), {
+  type:'line',
+  data:{labels:D.weekly.map(w=>w.week),
+    datasets:[
+      {label:'恢复均%',data:D.weekly.map(w=>w.recovery),borderColor:B,
+        backgroundColor:'rgba(59,125,221,.12)',fill:true,tension:.2,pointRadius:4},
+      {label:'一致性均%',data:D.weekly.map(w=>w.consistency),borderColor:Y,tension:.2,pointRadius:4},
+      {label:'Strain均（右轴）',data:D.weekly.map(w=>w.strain),yAxisID:'y2',
+        borderColor:R,borderDash:[5,4],tension:.2,pointRadius:4}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}},title:{display:true,text:'4 周进程：恢复↑ 负荷↓ 的镜像弧线'}},
+    scales:{y:{min:0,max:100,title:{display:true,text:'%'}},
+      y2:{position:'right',min:0,max:21,grid:{drawOnChartArea:false},title:{display:true,text:'Strain'}}}}
+});
+
+// 生理信号趋势 RHR + SpO2
+new Chart(document.getElementById('physioTrend'), {
+  type:'line',
+  data:{labels:D.rec_full.map(x=>x.d),
+    datasets:[
+      {label:'静息心率 RHR',data:D.rec_full.map(x=>x.rhr),yAxisID:'y',
+        borderColor:'#d9534f',backgroundColor:'rgba(217,83,79,.10)',fill:true,tension:.3,pointRadius:2},
+      {label:'血氧 SpO₂%',data:D.rec_full.map(x=>x.spo2),yAxisID:'y2',
+        borderColor:T,tension:.3,pointRadius:2}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}},title:{display:true,text:'生理信号逐日漂移（RHR 左 / SpO₂ 右）'}},
+    scales:{y:{min:45,max:90,title:{display:true,text:'RHR bpm'}},
+      y2:{position:'right',min:85,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'SpO₂ %'}}}}
+});
+</script>
+</body>
+</html>
