@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WHOOP 本周趋势</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{--bg:#f5f7fa;--card:#fff;--ink:#1f2a37;--sub:#5b6b7c;--line:#e3e8ef;
+        --green:#2e9e5b;--yellow:#e8a33d;--red:#d9534f;--blue:#3b7ddd;--purple:#7a5cd0;--teal:#1aa3a3;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;line-height:1.65}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+  header{background:linear-gradient(135deg,#1f2a37,#2e4a6b);color:#fff;border-radius:16px;padding:24px 26px;margin-bottom:20px}
+  header h1{margin:0 0 6px;font-size:22px}
+  header .meta{font-size:12px;opacity:.85}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0}
+  .summary .zone{font-size:18px;font-weight:700}
+  .summary .tip{color:var(--sub);font-size:13px;margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center}
+  th{background:#eef3f9;font-weight:600}
+  td.l,th.l{text-align:left}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0}
+  h2{font-size:16px;margin:0 0 12px}
+  .chart-box{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:10px}
+  canvas{max-width:100%}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:24px}
+  .pill{display:inline-block;background:#eef3f9;border-radius:20px;padding:3px 12px;font-size:12px;color:var(--sub);margin:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>WHOOP 本周趋势</h1>
+  <div class="meta">近 7 天：2026-10-09 ～ 2026-10-17 · 生成于 2026-10-19 15:18</div>
+</header>
+
+<div class="summary">
+  <div class="zone">🟢 绿区 · 今日 恢复 89.0%</div>
+  <div class="tip">身体电量充足，可以放心上强度</div>
+  <table>
+    <tr><th class="l">指标</th><th>今日</th><th>昨日</th><th>变化</th></tr>
+    <tr><td class='l'>实睡时长</td><td style='color:#2e9e5b;font-weight:700'>13.7h</td><td>0.0h</td><td style='color:#2e9e5b'>▲ 13.7h ✅</td></tr>
+  </table>
+</div>
+
+<section>
+  <h2>恢复分数 & HRV（近 7 天）</h2>
+  <div class="chart-box"><canvas id="recHrv" height="230"></canvas></div>
+</section>
+
+<section>
+  <h2>静息心率 & 血氧（近 7 天）</h2>
+  <div class="chart-box"><canvas id="physio" height="230"></canvas></div>
+</section>
+
+<section>
+  <h2>负荷 Strain（近 7 天）</h2>
+  <div class="chart-box"><canvas id="strain" height="230"></canvas></div>
+</section>
+
+<section>
+  <h2>实睡时长 & 一致性（近 7 天）</h2>
+  <div class="chart-box"><canvas id="sleep" height="230"></canvas></div>
+</section>
+
+<footer>
+  数据来自 WHOOP 官方 API 实测 · 账户时区 UTC，按北京日期展示 · 图表仅供健康管理参考，不构成医疗建议。
+</footer>
+</div>
+
+<script>
+const D = {"labels": ["10-09", "10-11", "10-12", "10-13", "10-15", "10-16", "10-17"], "rec": [null, 79.0, 67.0, 86.0, 71.0, null, 89.0], "hrv": [null, 71.86633, 64.938126, 78.9326, 64.01595, null, 77.341156], "rhr": [null, 56.0, 55.0, 52.0, 57.0, null, 55.0], "spo2": [null, 93.8125, 91.875, 88.333336, 96.166664, null, 95.14286], "strain": [7.4570203, 5.299808, 4.18082, 4.4450293, 5.654562, null, 6.91682], "sleep_h": [null, 581, 320, 470, 467, null, 822], "cons": [null, 0.0, 0.0, 43.0, 73.0, null, 41.0], "perf": [null, 100.0, 79.0, 75.0, 85.0, null, 75.0]};
+const G='#2e9e5b', Y='#e8a33d', R='#d9534f', B='#3b7ddd', P='#7a5cd0', T='#1aa3a3';
+Chart.defaults.font.family = '-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+Chart.defaults.color = '#5b6b7c';
+const none = v => v===null||v===undefined;
+
+new Chart(document.getElementById('recHrv'), {
+  type:'line',
+  data:{labels:D.labels,
+    datasets:[
+      {label:'恢复分数 %',data:D.rec,borderColor:B,backgroundColor:'rgba(59,125,221,.12)',fill:true,tension:.3,pointRadius:3,
+        pointBackgroundColor:D.rec.map(v=>v==null?'#ccc':(v>=67?G:(v>=34?Y:R))},
+      {label:'HRV ms',data:D.hrv,borderColor:P,backgroundColor:'transparent',tension:.3,pointRadius:2,borderDash:[4,3]}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{min:0,max:100,title:{display:true,text:'恢复 %'}},
+      y2:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'HRV ms'}}}}
+});
+
+new Chart(document.getElementById('physio'), {
+  type:'line',
+  data:{labels:D.labels,
+    datasets:[
+      {label:'静息心率',data:D.rhr,borderColor:R,backgroundColor:'rgba(217,83,79,.10)',fill:true,tension:.3,pointRadius:3,yAxisID:'y'},
+      {label:'血氧 %',data:D.spo2,borderColor:T,backgroundColor:'transparent',tension:.3,pointRadius:2,yAxisID:'y2'}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{min:45,max:90,title:{display:true,text:'RHR bpm'}},
+      y2:{position:'right',min:85,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'SpO₂ %'}}}}
+});
+
+new Chart(document.getElementById('strain'), {
+  type:'line',
+  data:{labels:D.labels,datasets:[
+    {label:'Strain',data:D.strain,borderColor:T,backgroundColor:'rgba(26,163,163,.12)',fill:true,tension:.3,pointRadius:3}
+  ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{min:0,max:21,title:{display:true,text:'Strain / 21'},
+      grid:{color:ctx=>ctx.tick.value<=10?'rgba(46,158,91,.12)':'rgba(217,83,79,.10)'}}}}
+});
+
+new Chart(document.getElementById('sleep'), {
+  type:'line',
+  data:{labels:D.labels,
+    datasets:[
+      {label:'实睡 h',data:D.sleep_h,borderColor:B,backgroundColor:'rgba(59,125,221,.10)',fill:true,tension:.3,pointRadius:3,yAxisID:'y'},
+      {label:'一致性 %',data:D.cons,borderColor:Y,backgroundColor:'transparent',tension:.3,pointRadius:2,yAxisID:'y2'}
+    ]},
+  options:{plugins:{legend:{labels:{boxWidth:12}}},
+    scales:{y:{title:{display:true,text:'实睡小时'}},
+      y2:{position:'right',min:0,max:100,grid:{drawOnChartArea:false},title:{display:true,text:'一致性 %'}}}}
+});
+</script>
+</body>
+</html>
