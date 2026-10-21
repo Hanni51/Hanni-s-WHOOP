@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-20T08:58:59+08:00",
+ "generated_at": "2026-10-21T16:36:40+08:00",
  "metrics": [
   "recovery",
   "hrv",
@@ -13,21 +13,16 @@
  ],
  "days": [
   {
-   "date": "2026-09-19",
-   "strain": 12.7
-  },
-  {
    "date": "2026-09-20",
-   "recovery": 28.0,
-   "hrv": 52.0,
-   "rhr": 72.0,
-   "spo2": 90.6,
-   "skin": 34.5,
-   "sleep_perf": 52.0,
-   "sleep_cons": 44.0,
-   "sleep_min": 508,
-   "strain": 9.3,
-   "workouts": 1
+   "recovery": 68.0,
+   "hrv": 86.4,
+   "rhr": 57.0,
+   "spo2": 91.6,
+   "skin": 34.7,
+   "sleep_perf": 76.0,
+   "sleep_cons": 55.0,
+   "sleep_min": 356,
+   "strain": 9.3
   },
   {
    "date": "2026-09-21",
