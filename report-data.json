@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T09:13:28+08:00",
+ "generated_at": "2026-10-27T09:09:06+08:00",
  "metrics": [
   "recovery",
   "hrv",
@@ -13,53 +13,8 @@
  ],
  "days": [
   {
-   "date": "2026-09-21",
-   "strain": 6.8
-  },
-  {
-   "date": "2026-09-22",
-   "recovery": 46.0,
-   "hrv": 63.3,
-   "rhr": 61.0,
-   "spo2": 87.8,
-   "skin": 34.7,
-   "sleep_perf": 79.0,
-   "sleep_cons": 65.0,
-   "sleep_min": 368,
-   "strain": 14.1
-  },
-  {
-   "date": "2026-09-23",
-   "workouts": 1
-  },
-  {
-   "date": "2026-09-24",
-   "strain": 15.2
-  },
-  {
-   "date": "2026-09-25",
-   "recovery": 40.0,
-   "hrv": 52.1,
-   "rhr": 68.0,
-   "spo2": 92.8,
-   "skin": 34.8,
-   "sleep_perf": 72.0,
-   "sleep_cons": 47.0,
-   "sleep_min": 656,
-   "workouts": 3
-  },
-  {
    "date": "2026-09-26",
-   "recovery": 32.0,
-   "hrv": 42.8,
-   "rhr": 74.0,
-   "spo2": 92.2,
-   "skin": 34.8,
-   "sleep_perf": 59.0,
-   "sleep_cons": 50.0,
-   "sleep_min": 651,
-   "strain": 15.5,
-   "workouts": 5
+   "strain": 15.5
   },
   {
    "date": "2026-09-27",
@@ -256,6 +211,44 @@
   },
   {
    "date": "2026-10-23",
+   "workouts": 1
+  },
+  {
+   "date": "2026-10-24",
+   "recovery": 73.0,
+   "hrv": 73.6,
+   "rhr": 54.0,
+   "spo2": 90.5,
+   "skin": 33.0,
+   "sleep_perf": 80.0,
+   "sleep_cons": 52.0,
+   "sleep_min": 586,
+   "strain": 16.5,
+   "workouts": 1
+  },
+  {
+   "date": "2026-10-25",
+   "recovery": 1.0,
+   "hrv": 13.6,
+   "rhr": 87.0,
+   "spo2": 92.7,
+   "skin": 34.3,
+   "sleep_perf": 13.0,
+   "sleep_cons": 51.0,
+   "sleep_min": 155,
+   "strain": 3.0
+  },
+  {
+   "date": "2026-10-26",
+   "recovery": 80.0,
+   "hrv": 88.3,
+   "rhr": 48.0,
+   "spo2": 95.1,
+   "skin": 34.0,
+   "sleep_perf": 71.0,
+   "sleep_cons": 56.0,
+   "sleep_min": 376,
+   "strain": 5.7,
    "workouts": 1
   }
  ]
