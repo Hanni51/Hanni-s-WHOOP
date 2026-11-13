@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-12T09:06:53+08:00",
+ "generated_at": "2026-11-13T09:07:01+08:00",
  "metrics": [
   "recovery",
   "hrv",
@@ -14,15 +14,15 @@
  "days": [
   {
    "date": "2026-10-13",
-   "recovery": 86.0,
-   "hrv": 78.9,
-   "rhr": 52.0,
-   "spo2": 88.3,
-   "skin": 34.1,
-   "sleep_perf": 75.0,
-   "sleep_cons": 43.0,
-   "sleep_min": 470,
-   "strain": 4.4
+   "recovery": 78.0,
+   "hrv": 71.0,
+   "rhr": 54.0,
+   "spo2": 90.9,
+   "skin": 34.8,
+   "sleep_perf": 81.0,
+   "sleep_cons": 58.0,
+   "sleep_min": 512,
+   "strain": 5.2
   },
   {
    "date": "2026-10-15",
